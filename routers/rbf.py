@@ -46,13 +46,17 @@ async def eval_rbf(info: EvalRbf):
     return output
 
 
+def _make_rbf(info: RbfResponse):
+    networks.rbf = Rbf(info.num_inputs, len(info.radial_centers))
+
+    for index, radial_center in enumerate(networks.rbf.radial_centers):
+        radial_center.centroids = info.radial_centers[index].centroids
+
+    networks.rbf.output_node.weights = info.output_node.weights
+    networks.rbf.output_node.bias = info.output_node.bias
+
+
 @router.post('/set')
 async def set_rbf(info: RbfResponse):
-    if networks.rbf is None:
-        networks.rbf = Rbf(info.num_inputs, len(info.radial_centers))
-
-    networks.rbf.num_inputs = info.num_inputs
-    networks.rbf.radial_centers = info.radial_centers
-    networks.rbf.output_node = info.output_node
-
+    _make_rbf(info)
     return _make_response(networks.rbf)
