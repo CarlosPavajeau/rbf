@@ -37,5 +37,4 @@ class PerceptronResponse(BaseModel):
     num_inputs: int
     num_layers: int
     layers: List[LayerResponse]
-    activation_function_names: List[str]
     errors: List[float]
