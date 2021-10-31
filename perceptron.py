@@ -28,6 +28,7 @@ class Layer:
     def __init__(self, num_inputs: int, num_nodes: int, activation_function_name: str):
         self.num_inputs = num_inputs
         self.nodes = [Node(num_inputs) for _ in range(num_nodes)]
+        self.activation_function_name = activation_function_name
         self.activation_function = get_activation_function(activation_function_name)
 
     def eval(self, inputs: list[float]) -> list[float]:
@@ -52,7 +53,7 @@ class Perceptron:
                  activation_functions_names: list[str]):
         self.num_inputs = num_inputs
         self.num_layers = num_layers
-        self.error = []
+        self.errors = []
         self.all_layers_activations = []
 
         self.layers = []
@@ -97,19 +98,15 @@ class Perceptron:
                 self.all_layers_activations = []
                 predicted_output = self.eval(inp)
 
-                iteration_error += sum([pow(correct - predicted, 2) for predicted, correct in
-                                        zip(predicted_output, correct_output)])
-
                 lineal_errors = [correct - predicted for predicted, correct in
                                  zip(predicted_output, correct_output)]
                 pattern_error = sum(map(lambda x: abs(x), lineal_errors)) / float(len(correct_output))
+                iteration_error += pattern_error
 
                 self._update_weights(learning_rate, pattern_error, lineal_errors)
 
-                print(f'Lineal errors {lineal_errors}')
-                print(f'Pattern error {pattern_error}')
-
-            print(f'Error: {iteration_error}')
+            iteration_error /= len(inputs)
+            self.errors.append(iteration_error)
             if iteration_error <= tolerance:
                 return True
 
