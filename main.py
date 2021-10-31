@@ -5,11 +5,12 @@ from pydantic import BaseModel
 
 from rbf import Rbf
 from perceptron import Perceptron
-from routers import rbf
+from routers import rbf, perceptron
 
 app = FastAPI()
 
 app.include_router(rbf.router)
+app.include_router(perceptron.router)
 
 
 class Item(BaseModel):
