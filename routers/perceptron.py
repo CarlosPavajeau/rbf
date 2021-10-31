@@ -43,7 +43,7 @@ async def fit_perceptron(info: FitPerceptron):
     return _make_response(networks.perceptron)
 
 
-@router.get('/eval')
+@router.patch('/eval')
 async def eval_perceptron(info: EvalPerceptron):
     output = networks.perceptron.eval(info.inputs)
     return output
