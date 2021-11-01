@@ -1,6 +1,7 @@
 from typing import Optional
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from rbf import Rbf
@@ -8,6 +9,20 @@ from perceptron import Perceptron
 from routers import rbf, perceptron
 
 app = FastAPI()
+
+origins = [
+    # Add other origins here
+    # You can add "*" for allow all origins
+    "http://localhost",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(rbf.router)
 app.include_router(perceptron.router)
